@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.services.PessoaService;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("api/pessoas")
@@ -20,6 +21,7 @@ public class PessoaResource {
 	@Autowired
 	private PessoaService pessoaService;
 	
+	@Operation(summary = "Busca de Todas as Pessoas")
 	@GetMapping
 	public ResponseEntity<List<Pessoa>> findAll(){
 		List<Pessoa> list = pessoaService.findAll();
@@ -31,6 +33,7 @@ public class PessoaResource {
 		return ResponseEntity.ok(list);
 	}
 	
+	@Operation(summary = "Cadastro de Pessoa")
 	@PostMapping
 	public ResponseEntity<Pessoa> insert(@RequestBody Pessoa pessoa){
 		
