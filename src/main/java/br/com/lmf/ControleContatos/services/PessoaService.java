@@ -19,6 +19,11 @@ public class PessoaService {
 	}
 	
 	
+	public Pessoa insert(Pessoa pessoa) {
+		
+		return pessoaRepository.save(pessoa);
+	}
+	
 	
 
 }

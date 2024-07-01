@@ -1,11 +1,15 @@
 package br.com.lmf.ControleContatos.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,18 +19,37 @@ public class Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(nullable = false)
 	private String nome;
+	
+	@Column(nullable = false)
 	private String endereco;
+	
+	@Column(nullable = false)
 	private String cep;
+	
+	@Column(nullable = false)
 	private String cidade;
+	
+	@Column(nullable = false)
 	private String uf;
 	
-	@ManyToOne
-	@JoinColumn(name = "contato_id", referencedColumnName = "id")
-	private Contatos contato;
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "pessoa")
+	private List<Contatos> contatos = new ArrayList<>();
 	
 	
 	public Pessoa() {
+	}
+
+	public Pessoa(Long id, String nome, String endereco, String cep, String cidade, String uf, List<Contatos> contatos) {
+		this.id = id;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.cep = cep;
+		this.cidade = cidade;
+		this.uf = uf;
+		this.contatos = contatos;
 	}
 
 
@@ -90,13 +113,13 @@ public class Pessoa {
 	}
 
 
-	public Contatos getContato() {
-		return contato;
+	public List<Contatos> getContato() {
+		return contatos;
 	}
 
 
-	public void setContato(Contatos contato) {
-		this.contato = contato;
+	public void setContato(List<Contatos> contatos) {
+		this.contatos = contatos;
 	}
 	
 	
