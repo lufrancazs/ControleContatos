@@ -33,12 +33,15 @@ public class PessoaService {
 		return pessoaRepository.findById(id);
 	}
 	
-	public Pessoa insert(Pessoa pessoa) {
+	public Pessoa insert(Pessoa pessoa) throws Exception {
 		
-		Map<String, Object> endereco = viaCepClient.buscarEndereco(pessoa.getCep());
-		pessoa.setEndereco((String) endereco.get("logradouro"));
-		pessoa.setCidade((String) endereco.get("localidade"));
-		pessoa.setUf((String) endereco.get("uf"));
+		Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(pessoa.getNome(), pessoa.getCep());
+		
+		if(findByNomeAndCep.isPresent()) {
+			throw new Exception("Nome e CEP já existe");
+		}
+		
+		atualizarEndereco(pessoa, pessoa);
 		
 		return pessoaRepository.save(pessoa);
 	}
@@ -46,14 +49,24 @@ public class PessoaService {
 	public Pessoa update(Pessoa pessoa, Long id) throws Exception{
 			Optional<Pessoa> findPessoa = pessoaRepository.findById(id);
 			
+			
 			if(findPessoa.isPresent()) {
+				
+				Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(pessoa.getNome(), pessoa.getCep());
+				
+				if(findByNomeAndCep.isPresent()) {
+					throw new Exception("Nome e CEP já existe");
+				}
+				
+				atualizarEndereco(pessoa, pessoa);
+				
 				Pessoa uptPessoa = findPessoa.get();
 				uptPessoa.setNome(pessoa.getNome());
 				uptPessoa.setEndereco(pessoa.getEndereco());
 				uptPessoa.setCep(pessoa.getCep());
 				uptPessoa.setCidade(pessoa.getCidade());
 				uptPessoa.setUf(pessoa.getUf());
-				return pessoaRepository.save(uptPessoa);
+				return pessoaRepository.save(pessoa);
 			} else {
 				throw new Exception("Pessoa não existe para este id: " + id);
 			}
@@ -62,6 +75,13 @@ public class PessoaService {
 	
 	public void delete(Long id) {
 		pessoaRepository.deleteById(id);
+	}
+	
+	private void atualizarEndereco(Pessoa pessoa, Pessoa newPessoa) {
+		Map<String, Object> endereco = viaCepClient.buscarEndereco(pessoa.getCep());
+		newPessoa.setEndereco((String) endereco.get("logradouro"));
+		newPessoa.setCidade((String) endereco.get("localidade"));
+		newPessoa.setUf((String) endereco.get("uf"));
 	}
 
 }

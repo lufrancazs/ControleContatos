@@ -60,13 +60,14 @@ public class PessoaResource {
 	@PostMapping
 	public ResponseEntity<Pessoa> insert(@RequestBody Pessoa pessoa){
 		
+		try {
+			
 		Pessoa newPessoa = pessoaService.insert(pessoa);
+		return ResponseEntity.ok(newPessoa);
 		
-		if(newPessoa == null) {
+		}catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
-		
-		return ResponseEntity.ok(newPessoa);
 	}
 	
 	@Operation(summary = "Atualizar Pessoa por ID")
