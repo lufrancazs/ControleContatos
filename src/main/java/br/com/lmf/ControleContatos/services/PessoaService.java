@@ -1,11 +1,13 @@
 package br.com.lmf.ControleContatos.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.lmf.ControleContatos.client.ViaCepClient;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.repositories.PessoaRepository;
 
@@ -15,6 +17,14 @@ public class PessoaService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@Autowired
+	private ViaCepClient viaCepClient;
+	
+	public PessoaService(PessoaRepository pessoaRepository, ViaCepClient viaCepClient) {
+		this.pessoaRepository = pessoaRepository;
+		this.viaCepClient = viaCepClient;
+	}
+
 	public List<Pessoa> findAll() {
 		return pessoaRepository.findAll();
 	}
@@ -24,6 +34,12 @@ public class PessoaService {
 	}
 	
 	public Pessoa insert(Pessoa pessoa) {
+		
+		Map<String, Object> endereco = viaCepClient.buscarEndereco(pessoa.getCep());
+		pessoa.setEndereco((String) endereco.get("logradouro"));
+		pessoa.setCidade((String) endereco.get("localidade"));
+		pessoa.setUf((String) endereco.get("uf"));
+		
 		return pessoaRepository.save(pessoa);
 	}
 	
