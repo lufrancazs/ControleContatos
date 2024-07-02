@@ -26,6 +26,11 @@ public class PessoaResource {
 	@Autowired
 	private PessoaService pessoaService;
 	
+	public PessoaResource(PessoaService pessoaService) {
+		this.pessoaService = pessoaService;
+	}
+
+
 	@Operation(summary = "Busca de Todas as Pessoas")
 	@GetMapping
 	public ResponseEntity<List<Pessoa>> findAll(){
@@ -65,15 +70,15 @@ public class PessoaResource {
 	}
 	
 	@Operation(summary = "Atualizar Pessoa por ID")
-	@PutMapping
-	public ResponseEntity<Pessoa> update(@RequestBody Pessoa pessoa){
+	@PutMapping("/{id}")
+	public ResponseEntity<Pessoa> update(@RequestBody Pessoa pessoa, @PathVariable Long id){
 		
-		Pessoa uptPessoa = pessoaService.update(pessoa);
-		
-		if (uptPessoa == null) {
+		try{
+			pessoa = pessoaService.update(pessoa, id);
+			return ResponseEntity.ok(pessoa);
+		}catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(uptPessoa);
 	}
 	
 	@Operation(summary = "Excluir Pessoa por ID")

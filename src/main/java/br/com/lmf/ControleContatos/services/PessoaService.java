@@ -27,26 +27,25 @@ public class PessoaService {
 		return pessoaRepository.save(pessoa);
 	}
 	
-	public Pessoa update(Pessoa pessoa){
-		Optional<Pessoa> findByPessoa = pessoaRepository.findById(pessoa.getId());
-		
-		if(findByPessoa.isPresent()) {
-			Pessoa uptPessoa = findByPessoa.get();
-			uptPessoa.setNome(pessoa.getNome());
-			uptPessoa.setEndereco(pessoa.getEndereco());
-			uptPessoa.setCep(pessoa.getCep());
-			uptPessoa.setCidade(pessoa.getCidade());
-			uptPessoa.setUf(pessoa.getUf());
+	public Pessoa update(Pessoa pessoa, Long id) throws Exception{
+			Optional<Pessoa> findPessoa = pessoaRepository.findById(id);
 			
-			return pessoaRepository.save(uptPessoa);
-		}
-		
-		return pessoaRepository.save(pessoa);
+			if(findPessoa.isPresent()) {
+				Pessoa uptPessoa = findPessoa.get();
+				uptPessoa.setNome(pessoa.getNome());
+				uptPessoa.setEndereco(pessoa.getEndereco());
+				uptPessoa.setCep(pessoa.getCep());
+				uptPessoa.setCidade(pessoa.getCidade());
+				uptPessoa.setUf(pessoa.getUf());
+				return pessoaRepository.save(uptPessoa);
+			} else {
+				throw new Exception("Pessoa não existe para este id: " + id);
+			}
+
 	}
 	
 	public void delete(Long id) {
 		pessoaRepository.deleteById(id);
 	}
-	
 
 }
