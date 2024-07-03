@@ -55,15 +55,10 @@ public class PessoaResource {
 	@Operation(summary = "Cadastro de Pessoa")
 	@PostMapping
 	public ResponseEntity<Pessoa> insert(@RequestBody PessoaSimplesDto dto){
-		
-		try {
 			
 		Pessoa newPessoa = pessoaService.insert(dto);
-		return ResponseEntity.ok(newPessoa);
+		return ResponseEntity.status(HttpStatus.CREATED).body(newPessoa);
 		
-		}catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
 	}
 	
 	@Operation(summary = "Atualizar Pessoa por ID")

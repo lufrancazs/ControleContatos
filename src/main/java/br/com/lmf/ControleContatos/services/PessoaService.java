@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import br.com.lmf.ControleContatos.client.ViaCepClient;
 import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
+import br.com.lmf.ControleContatos.exceptions.CepNotFoundException;
+import br.com.lmf.ControleContatos.exceptions.NomeAndCepDataAlreadyExistsException;
 import br.com.lmf.ControleContatos.exceptions.ResourceNotFoundException;
 import br.com.lmf.ControleContatos.repositories.PessoaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,40 +40,37 @@ public class PessoaService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
-	public Pessoa insert(PessoaSimplesDto dto) throws Exception {
+	public Pessoa insert(PessoaSimplesDto dto) {
 
 		Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(dto.getNome(), dto.getCep());
 
 		if (findByNomeAndCep.isPresent()) {
-			throw new Exception("Nome e CEP já existe");
+			throw new NomeAndCepDataAlreadyExistsException(toString());
 		}
 
-		Pessoa pessoa = new Pessoa();
-		pessoa.setNome(dto.getNome());
-		pessoa.setCep(dto.getCep());
+		Pessoa pessoa = new Pessoa();pessoa.setNome(dto.getNome());pessoa.setCep(dto.getCep());
 
 		atualizarEndereco(dto, pessoa);
-
-		return pessoaRepository.save(pessoa);
-	}
+				return pessoaRepository.save(pessoa);
+			}
 
 	public Pessoa update(PessoaSimplesDto dto, Long id) {
 
 		try {
 			Pessoa uptPessoa = pessoaRepository.getReferenceById(id);
 
-				Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(dto.getNome(), dto.getCep());
+			Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(dto.getNome(), dto.getCep());
 
-				if (findByNomeAndCep.isPresent()) {
-					throw new ResourceNotFoundException("Nome e CEP já existe");
-				}				
+			if (findByNomeAndCep.isPresent()) {
+				throw new NomeAndCepDataAlreadyExistsException(toString());
+			}
 
-				uptPessoa.setNome(dto.getNome());
-				uptPessoa.setCep(dto.getCep());
+			uptPessoa.setNome(dto.getNome());
+			uptPessoa.setCep(dto.getCep());
 
-				atualizarEndereco(dto, uptPessoa);
+			atualizarEndereco(dto, uptPessoa);
 
-				return pessoaRepository.save(uptPessoa);
+			return pessoaRepository.save(uptPessoa);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(e.getMessage());
 		}
@@ -85,6 +84,12 @@ public class PessoaService {
 	private void atualizarEndereco(PessoaSimplesDto dto, Pessoa newPessoa) {
 
 		Map<String, Object> endereco = viaCepClient.buscarEndereco(dto.getCep());
+
+		if (endereco == null || endereco.get("logradouro") == null || endereco.get("localidade") == null
+				|| endereco.get("uf") == null) {
+			throw new CepNotFoundException(toString());
+		}
+
 		newPessoa.setEndereco((String) endereco.get("logradouro"));
 		newPessoa.setCidade((String) endereco.get("localidade"));
 		newPessoa.setUf((String) endereco.get("uf"));
