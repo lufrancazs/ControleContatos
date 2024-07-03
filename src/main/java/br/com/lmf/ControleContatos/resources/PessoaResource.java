@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.services.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,11 +59,11 @@ public class PessoaResource {
 	
 	@Operation(summary = "Cadastro de Pessoa")
 	@PostMapping
-	public ResponseEntity<Pessoa> insert(@RequestBody Pessoa pessoa){
+	public ResponseEntity<Pessoa> insert(@RequestBody PessoaSimplesDto dto){
 		
 		try {
 			
-		Pessoa newPessoa = pessoaService.insert(pessoa);
+		Pessoa newPessoa = pessoaService.insert(dto);
 		return ResponseEntity.ok(newPessoa);
 		
 		}catch (Exception e) {
@@ -72,14 +73,17 @@ public class PessoaResource {
 	
 	@Operation(summary = "Atualizar Pessoa por ID")
 	@PutMapping("/{id}")
-	public ResponseEntity<Pessoa> update(@RequestBody Pessoa pessoa, @PathVariable Long id){
+	public ResponseEntity<Pessoa> update(@RequestBody PessoaSimplesDto dto, @PathVariable Long id){
 		
-		try{
-			pessoa = pessoaService.update(pessoa, id);
-			return ResponseEntity.ok(pessoa);
-		}catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+			Pessoa uptPessoa;
+			try {
+				uptPessoa = pessoaService.update(dto, id);
+			} catch (Exception e) {
+				e.getMessage();
+				return ResponseEntity.notFound().build();
+			}
+			return ResponseEntity.ok(uptPessoa);
+
 	}
 	
 	@Operation(summary = "Excluir Pessoa por ID")

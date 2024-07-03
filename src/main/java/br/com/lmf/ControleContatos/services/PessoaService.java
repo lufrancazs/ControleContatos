@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.lmf.ControleContatos.client.ViaCepClient;
+import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.repositories.PessoaRepository;
 
@@ -33,40 +34,43 @@ public class PessoaService {
 		return pessoaRepository.findById(id);
 	}
 	
-	public Pessoa insert(Pessoa pessoa) throws Exception {
+	public Pessoa insert(PessoaSimplesDto dto) throws Exception {
 		
-		Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(pessoa.getNome(), pessoa.getCep());
+		Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(dto.getNome(), dto.getCep());
 		
 		if(findByNomeAndCep.isPresent()) {
 			throw new Exception("Nome e CEP já existe");
 		}
 		
-		atualizarEndereco(pessoa, pessoa);
+		Pessoa pessoa = new Pessoa();
+		pessoa.setNome(dto.getNome());
+		pessoa.setCep(dto.getCep());
+		
+		atualizarEndereco(dto, pessoa);
 		
 		return pessoaRepository.save(pessoa);
 	}
 	
-	public Pessoa update(Pessoa pessoa, Long id) throws Exception{
+	public Pessoa update(PessoaSimplesDto dto, Long id) throws Exception{
 			Optional<Pessoa> findPessoa = pessoaRepository.findById(id);
 			
 			
 			if(findPessoa.isPresent()) {
 				
-				Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(pessoa.getNome(), pessoa.getCep());
+				Optional<Pessoa> findByNomeAndCep = pessoaRepository.findByNomeAndCep(dto.getNome(), dto.getCep());
 				
 				if(findByNomeAndCep.isPresent()) {
 					throw new Exception("Nome e CEP já existe");
 				}
 				
-				atualizarEndereco(pessoa, pessoa);
-				
 				Pessoa uptPessoa = findPessoa.get();
-				uptPessoa.setNome(pessoa.getNome());
-				uptPessoa.setEndereco(pessoa.getEndereco());
-				uptPessoa.setCep(pessoa.getCep());
-				uptPessoa.setCidade(pessoa.getCidade());
-				uptPessoa.setUf(pessoa.getUf());
-				return pessoaRepository.save(pessoa);
+		
+				uptPessoa.setNome(dto.getNome());
+				uptPessoa.setCep(dto.getCep());
+				
+				atualizarEndereco(dto, uptPessoa);
+				
+				return pessoaRepository.save(uptPessoa);
 			} else {
 				throw new Exception("Pessoa não existe para este id: " + id);
 			}
@@ -77,8 +81,8 @@ public class PessoaService {
 		pessoaRepository.deleteById(id);
 	}
 	
-	private void atualizarEndereco(Pessoa pessoa, Pessoa newPessoa) {
-		Map<String, Object> endereco = viaCepClient.buscarEndereco(pessoa.getCep());
+	private void atualizarEndereco(PessoaSimplesDto dto, Pessoa newPessoa) {
+		Map<String, Object> endereco = viaCepClient.buscarEndereco(dto.getCep());
 		newPessoa.setEndereco((String) endereco.get("logradouro"));
 		newPessoa.setCidade((String) endereco.get("localidade"));
 		newPessoa.setUf((String) endereco.get("uf"));
