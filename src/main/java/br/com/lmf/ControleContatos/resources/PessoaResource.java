@@ -1,7 +1,6 @@
 package br.com.lmf.ControleContatos.resources;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,12 +46,8 @@ public class PessoaResource {
 	
 	@Operation(summary = "Busca de Pessoa por ID")
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Pessoa>> findById(@PathVariable Long id){
-		Optional<Pessoa> pessoa = pessoaService.findById(id);
-		
-		if(pessoa.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+	public ResponseEntity<Pessoa> findById(@PathVariable Long id){
+		Pessoa pessoa = pessoaService.findById(id);
 		
 		return ResponseEntity.ok(pessoa);
 	}
@@ -75,13 +70,7 @@ public class PessoaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Pessoa> update(@RequestBody PessoaSimplesDto dto, @PathVariable Long id){
 		
-			Pessoa uptPessoa;
-			try {
-				uptPessoa = pessoaService.update(dto, id);
-			} catch (Exception e) {
-				e.getMessage();
-				return ResponseEntity.notFound().build();
-			}
+			Pessoa 	uptPessoa = pessoaService.update(dto, id);
 			return ResponseEntity.ok(uptPessoa);
 
 	}
