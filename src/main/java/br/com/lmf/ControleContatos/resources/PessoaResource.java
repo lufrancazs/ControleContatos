@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lmf.ControleContatos.dto.PessoaMalaDiretaDto;
 import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.services.PessoaService;
@@ -50,6 +51,15 @@ public class PessoaResource {
 		Pessoa pessoa = pessoaService.findById(id);
 		
 		return ResponseEntity.ok(pessoa);
+	}
+	
+	
+	@Operation(summary = "Busca de Pessoa Mala Direta por ID")
+	@GetMapping("/maladireta/{id}")
+	public ResponseEntity<PessoaMalaDiretaDto> malaDireta(@PathVariable Long id){
+		
+		PessoaMalaDiretaDto dto = pessoaService.getPessoaMalaDireta(id);
+		return ResponseEntity.ok(dto);
 	}
 	
 	@Operation(summary = "Cadastro de Pessoa")

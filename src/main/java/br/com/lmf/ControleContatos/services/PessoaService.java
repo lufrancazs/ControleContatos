@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.lmf.ControleContatos.client.ViaCepClient;
+import br.com.lmf.ControleContatos.dto.PessoaMalaDiretaDto;
 import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.exceptions.CepNotFoundException;
@@ -79,7 +80,22 @@ public class PessoaService {
 
 	public void delete(Long id) {
 		pessoaRepository.deleteById(id);
+	}	
+	
+	
+	public PessoaMalaDiretaDto getPessoaMalaDireta(Long id) {
+		try {
+		Pessoa pessoa = pessoaRepository.getReferenceById(id);
+		
+		String malaDireta = formatEndereco(pessoa);
+		
+		return new PessoaMalaDiretaDto(pessoa.getId(), pessoa.getNome(), malaDireta);
+		
+		}catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		}
 	}
+	
 
 	private void atualizarEndereco(PessoaSimplesDto dto, Pessoa newPessoa) {
 
@@ -93,6 +109,13 @@ public class PessoaService {
 		newPessoa.setEndereco((String) endereco.get("logradouro"));
 		newPessoa.setCidade((String) endereco.get("localidade"));
 		newPessoa.setUf((String) endereco.get("uf"));
+	}
+	
+	public String formatEndereco(Pessoa pessoa) {
+		String malaDireta = pessoa.getEndereco() 
+				+ ", CEP: " + pessoa.getCep() + " - " 
+				+ pessoa.getCidade() + "/" + pessoa.getUf();
+		return malaDireta;
 	}
 
 }
