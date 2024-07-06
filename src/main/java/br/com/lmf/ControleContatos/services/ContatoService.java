@@ -43,6 +43,13 @@ public class ContatoService {
 		return obj.orElseThrow( () -> new ResourceNotFoundException(id) ); 
 	}
 	
+	public List<Contatos> findAllByPessoa(Long id){
+		Pessoa pessoa = pessoaRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(id));
+		
+		return contatoRepository.findAllByPessoa(pessoa);
+		
+	}
 	
 	
 	public Contatos insert(ContatoSimplesDto dto) {

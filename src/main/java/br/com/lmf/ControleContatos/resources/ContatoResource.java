@@ -24,6 +24,10 @@ public class ContatoResource {
 	@Autowired
 	private ContatoService contatoService;
 	
+	public ContatoResource(ContatoService contatoService) {
+		this.contatoService = contatoService;
+	}
+
 	@Operation(summary = "Busca por Todos os Contatos")
 	@GetMapping
 	public ResponseEntity<List<Contatos>> findAll(){
@@ -44,7 +48,17 @@ public class ContatoResource {
 		return ResponseEntity.ok(contato);
 	}
 	
-	
+	@Operation(summary = "Busca de Contato por Pessoa ID")
+	@GetMapping("/pessoa/{id}")
+	public ResponseEntity<List<Contatos>> findContatoPorPessoa(@PathVariable Long id){
+		List<Contatos> list = contatoService.findAllByPessoa(id);
+		
+		if(list == null || list.size() == 0) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok(list);
+	}
 	
 	
 	@Operation(summary = "Cadastro de Contato por Pessoa")
