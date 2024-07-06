@@ -49,7 +49,9 @@ public class PessoaService {
 			throw new NomeAndCepDataAlreadyExistsException(toString());
 		}
 
-		Pessoa pessoa = new Pessoa();pessoa.setNome(dto.getNome());pessoa.setCep(dto.getCep());
+		Pessoa pessoa = new Pessoa();
+		pessoa.setNome(dto.getNome());
+		pessoa.setCep(dto.getCep());
 
 		atualizarEndereco(dto, pessoa);
 				return pessoaRepository.save(pessoa);

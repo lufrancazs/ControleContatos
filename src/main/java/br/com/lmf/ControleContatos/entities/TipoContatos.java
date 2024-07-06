@@ -2,6 +2,7 @@ package br.com.lmf.ControleContatos.entities;
 
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,8 @@ public class TipoContatos {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(nullable = false)
 	private String descricao;
 	
 	public TipoContatos() {
@@ -61,8 +64,9 @@ public class TipoContatos {
 	
 	public enum Enum {
 		
-		TELEFONE(0L, "telefone"),
-		CELULAR(1L, "celular");
+		TELEFONE(1L, "telefone"),
+		CELULAR(2L, "celular"),
+		EMAIL(3L, "email");
 		
 		private Enum(Long id, String descricao) {
 			this.id = id;

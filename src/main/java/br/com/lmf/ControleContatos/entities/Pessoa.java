@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,22 +37,22 @@ public class Pessoa {
 	
 	@Column(nullable = false)
 	private String uf;
-	
+
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "pessoa")
-	private List<Contatos> contatos = new ArrayList<>();
-	
+	private List<Contatos> contato = new ArrayList<>();
 	
 	public Pessoa() {
 	}
 
-	public Pessoa(Long id, String nome, String endereco, String cep, String cidade, String uf, List<Contatos> contatos) {
+	public Pessoa(Long id, String nome, String endereco, String cep, String cidade, String uf, List<Contatos> contato) {
 		this.id = id;
 		this.nome = nome;
 		this.endereco = endereco;
 		this.cep = cep;
 		this.cidade = cidade;
 		this.uf = uf;
-		this.contatos = contatos;
+		this.contato = contato;
 	}
 
 
@@ -111,16 +113,14 @@ public class Pessoa {
 
 	public void setUf(String uf) {
 		this.uf = uf;
-	}
-
+	}	
 
 	public List<Contatos> getContato() {
-		return contatos;
+		return contato;
 	}
 
-
-	public void setContato(List<Contatos> contatos) {
-		this.contatos = contatos;
+	public void setContato(List<Contatos> contato) {
+		this.contato = contato;
 	}
 
 	@Override
