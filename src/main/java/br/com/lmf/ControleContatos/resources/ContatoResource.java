@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +67,15 @@ public class ContatoResource {
 	public ResponseEntity<Contatos> insert(@RequestBody ContatoSimplesDto dto){
 		Contatos newContato = contatoService.insert(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(newContato);
+	}
+	
+	@Operation(summary = "Atualizar Contato por ID")
+	@PutMapping("/{id}")
+	public ResponseEntity<Contatos> update(@PathVariable Long id, @RequestBody ContatoSimplesDto dto){
+		
+		Contatos uptContato = contatoService.update(dto, id);
+		return ResponseEntity.ok(uptContato);
+		
 	}
 	
 	
