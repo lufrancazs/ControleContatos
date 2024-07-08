@@ -2,15 +2,38 @@
 
 Esta API é um CRUD de Pessoas e Contatos, com integração com a ViaCEP para inserir as informações de endereço de forma automática, a partir do CEP.
 
-## 🛠️ Configuração e Instalação
+## 🛠️ Instalação e Configuração
 
-A configuração e instalação dos projetos requerem conhecimentos básicos em Maven e Spring Framework. É necessário ter o Java e o Maven instalados na sua máquina. Para a aplicação que utiliza banco de dados Postgresql, é necessário ter o Docker instalado para a instância do banco de dados.
+### Instalação
 
-Para rodar qualquer uma das aplicações, siga os passos abaixo:
+Clone o repositório e compile o projeto:
 
-1. Clone o repositório para sua máquina local.
-2. Navegue até a pasta do projeto específico que deseja executar.
-3. Execute o comando `mvn spring-boot:run` para iniciar a aplicação.
+```bash
+git clone https://github.com/seu-usuario/nome-do-repositorio.git
+cd nome-do-repositorio
+./mvnw clean install
+```
+
+### Configuração
+
+Configure as variáveis de ambiente no arquivo `application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mariadb://localhost:3306/nome-do-banco
+spring.datasource.username=seu-usuario
+spring.datasource.password=sua-senha
+spring.jpa.hibernate.ddl-auto=update
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+```
+
+### Uso
+
+Inicie o servidor:
+
+```bash
+./mvnw spring-boot:run
+```
 
 A API estará disponível em `http://localhost:8080`.
 
