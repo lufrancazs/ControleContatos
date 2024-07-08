@@ -2,17 +2,6 @@
 
 Esta API é um CRUD de Pessoas e Contatos, com integração com a ViaCEP para inserir as informações de endereço de forma automática, a partir do CEP.
 
-## 📋 Índice
-
-- [Configuração e Instalação](#configuracao-instalação)
-- [Documentação e Suporte](#documentacao-suporte)
-- [Modelagem de Dados](#modelagem-de-dados)
-- [Endpoints](#endpoints)
-  - [Pessoas](#pessoas)
-  - [Contatos](#contatos)
-- [Tecnologias Utilizadas](#tecnologias)
-- [Contato](#contato)
-
 ## 🛠️ Configuração e Instalação
 
 A configuração e instalação dos projetos requerem conhecimentos básicos em Maven e Spring Framework. É necessário ter o Java e o Maven instalados na sua máquina. Para a aplicação que utiliza banco de dados Postgresql, é necessário ter o Docker instalado para a instância do banco de dados.
