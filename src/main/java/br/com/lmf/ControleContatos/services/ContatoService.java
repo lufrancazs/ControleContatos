@@ -92,7 +92,10 @@ public class ContatoService {
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}
-
+	}
+	
+	public void delete(Long id) {
+		contatoRepository.deleteById(id);
 	}
 
 }
