@@ -38,7 +38,7 @@ public class PessoaService {
 	public Pessoa findById(Long id) {
 
 		Optional<Pessoa> obj = pessoaRepository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + id));
 	}
 
 	public Pessoa insert(PessoaSimplesDto dto) {
@@ -75,7 +75,7 @@ public class PessoaService {
 
 			return pessoaRepository.save(uptPessoa);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(e.getMessage());
+			throw new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + id);
 		}
 
 	}
@@ -94,7 +94,7 @@ public class PessoaService {
 		return new PessoaMalaDiretaDto(pessoa.getId(), pessoa.getNome(), malaDireta);
 		
 		}catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(e.getMessage());
+			throw new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + id);
 		}
 	}
 	

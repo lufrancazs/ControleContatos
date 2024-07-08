@@ -42,11 +42,11 @@ public class ContatoService {
 	public Contatos findById(Long id) {
 
 		Optional<Contatos> obj = contatoRepository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado pelo ID: " + id));
 	}
 
 	public List<Contatos> findAllByPessoa(Long id) {
-		Pessoa pessoa = pessoaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+		Pessoa pessoa = pessoaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + id));
 
 		return contatoRepository.findAllByPessoa(pessoa);
 
@@ -55,10 +55,10 @@ public class ContatoService {
 	public Contatos insert(ContatoSimplesDto dto) {
 
 		Pessoa findPessoa = pessoaRepository.findById(dto.getPessoaId())
-				.orElseThrow(() -> new ResourceNotFoundException(dto.getPessoaId()));
+				.orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + dto.getPessoaId()));
 
 		TipoContatos findTipoContato = tipoContatoRepository.findById(dto.getTipoContatosId())
-				.orElseThrow(() -> new ResourceNotFoundException(dto.getTipoContatosId()));
+				.orElseThrow(() -> new ResourceNotFoundException("Tipo de Contato não encontrado pelo ID: " + dto.getTipoContatosId()));
 
 		Contatos newContato = new Contatos();
 		newContato.setContato(dto.getContato());
@@ -75,10 +75,10 @@ public class ContatoService {
 			Contatos uptContato = contatoRepository.getReferenceById(id);
 			
 			TipoContatos findTipoContato = tipoContatoRepository.findById(dto.getTipoContatosId())
-					.orElseThrow(() -> new ResourceNotFoundException(dto.getTipoContatosId()));
+					.orElseThrow(() -> new ResourceNotFoundException("Tipo de Contato não encontrado pelo ID: " + dto.getTipoContatosId()));
 
 			Pessoa findPessoa = pessoaRepository.findById(dto.getPessoaId())
-					.orElseThrow(() -> new ResourceNotFoundException(dto.getPessoaId()));
+					.orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada pelo ID: " + dto.getPessoaId()));
 			
 			if(!uptContato.getPessoa().getId().equals(dto.getPessoaId())) {
 				throw new ResourceNotFoundException("O ID da pessoaId não corresponde ao ID da pessoa associada ao contato existente.");
@@ -90,7 +90,7 @@ public class ContatoService {
 
 			return contatoRepository.save(uptContato);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(id);
+			throw new ResourceNotFoundException("Contato não encontrado pelo ID: " + id);
 		}
 	}
 	
