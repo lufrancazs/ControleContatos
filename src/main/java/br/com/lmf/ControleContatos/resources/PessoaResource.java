@@ -19,7 +19,9 @@ import br.com.lmf.ControleContatos.dto.PessoaSimplesDto;
 import br.com.lmf.ControleContatos.entities.Pessoa;
 import br.com.lmf.ControleContatos.services.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Pessoa", description = "Ações Relacionadas a Pessoa")
 @RestController
 @RequestMapping("api/pessoas")
 public class PessoaResource {

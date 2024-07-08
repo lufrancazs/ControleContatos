@@ -18,7 +18,9 @@ import br.com.lmf.ControleContatos.dto.ContatoSimplesDto;
 import br.com.lmf.ControleContatos.entities.Contatos;
 import br.com.lmf.ControleContatos.services.ContatoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Contatos", description = "Ações Relacionadas a Contatos")
 @RestController
 @RequestMapping("/api/contatos")
 public class ContatoResource {
