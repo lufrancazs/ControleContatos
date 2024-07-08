@@ -79,6 +79,10 @@ public class ContatoService {
 
 			Pessoa findPessoa = pessoaRepository.findById(dto.getPessoaId())
 					.orElseThrow(() -> new ResourceNotFoundException(dto.getPessoaId()));
+			
+			if(!uptContato.getPessoa().getId().equals(dto.getPessoaId())) {
+				throw new ResourceNotFoundException("O ID da pessoaId não corresponde ao ID da pessoa associada ao contato existente.");
+			}
 
 			uptContato.setContato(dto.getContato());
 			uptContato.setTipoContatos(findTipoContato);
